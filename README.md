@@ -20,3 +20,4 @@ involves careful consideration of folder structure to ensure it is organized, ma
 #### loaders/: Modules to load and configure various aspects of the app (e.g., database connections).
 
 ## Here’s a small example to illustrate how controllers work:
+![chrome-capture (5)](https://github.com/user-attachments/assets/7d29796a-ddfb-443c-953e-5dee9571dce0)

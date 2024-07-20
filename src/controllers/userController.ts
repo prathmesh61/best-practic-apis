@@ -37,6 +37,20 @@ class UserController {
       res.status(400).json("error in getting userBuId");
     }
   }
+  static async update(req: Request, res: Response) {
+    try {
+      const body = req.body;
+      const { id } = req.params;
+      const user = await UserService.update(body, Number(id));
+      res.status(200).json({
+        message: "user updated",
+        user,
+      });
+    } catch (error) {
+      console.error(error, "error in update user");
+      res.status(400).json("error in update user");
+    }
+  }
 }
 
 export default UserController;

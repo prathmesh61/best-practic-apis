@@ -9,8 +9,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Post {
@@ -21,6 +22,9 @@ model Post {
   content   String?
   author    User     @relation(fields: [authorId], references: [id])
   authorId  Int
+  likes  Int[]
+  followers Int[]
+  category  Category @default(Other)
 }
 
 
@@ -30,5 +34,22 @@ model User {
   email   String   @unique
   name    String?
   posts   Post[]
+}
 
+enum Category {
+  Electronics
+  Clothing
+  HomeAppliances
+  Books
+  BeautyProducts
+  Sports
+  Toys
+  Automotive
+  Grocery
+  Furniture
+  Jewelry
+  Music
+  Tools
+  Tech
+  Other
 }

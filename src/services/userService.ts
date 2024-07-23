@@ -1,6 +1,8 @@
 import prisma from "../../prisma/db";
+import { registerUserType, updateUserType } from "../validations/index";
+
 class UserService {
-  static async createUser(data: { email: string; name: string }) {
+  static async createUser(data: registerUserType) {
     const user = await prisma.user.create({
       data: {
         email: data.email,
@@ -21,7 +23,7 @@ class UserService {
     await prisma.user.delete({ where: { id } });
     return "user successfully delete";
   }
-  static async update(data: { email?: string; name?: string }, id: number) {
+  static async update(data: updateUserType, id: number) {
     const user = await prisma.user.update({
       where: { id },
       data,

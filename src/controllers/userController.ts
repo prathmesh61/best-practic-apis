@@ -1,14 +1,16 @@
 import { Request, Response } from "express";
 import UserService from "../services/userService";
-type UserBody = {
-  email: string;
-  name: string;
-};
+import { registerUser, updateUser } from "../validations/index";
+import prisma from "../../prisma/db";
+
 class UserController {
   static async createUser(req: Request, res: Response) {
     try {
-      const userData: UserBody = req.body;
-      const newUser = await UserService.createUser(userData);
+      const userData = registerUser.safeParse(req.body);
+      if (userData.error) {
+        throw new Error(userData.error.message);
+      }
+      const newUser = await UserService.createUser(userData.data);
       res.status(201).json(newUser);
     } catch (error) {
       console.error(error, "error in creating user");
@@ -39,13 +41,19 @@ class UserController {
   }
   static async update(req: Request, res: Response) {
     try {
-      const body = req.body;
-      const { id } = req.params;
-      const user = await UserService.update(body, Number(id));
-      res.status(200).json({
-        message: "user updated",
-        user,
+      const body = updateUser.safeParse(req.body);
+      if (body.error) {
+        throw new Error(body.error.message);
+      }
+      const emailAlreadyExist = await prisma.user.findUnique({
+        where: { email: body.data.email },
       });
+      if (emailAlreadyExist) {
+        throw new Error("Email Already Taken.");
+      }
+      const { id } = req.params;
+      const user = await UserService.update(body.data, Number(id));
+      res.status(200).json(user);
     } catch (error) {
       console.error(error, "error in update user");
       res.status(400).json("error in update user");

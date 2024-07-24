@@ -23,7 +23,6 @@ model Post {
   author    User     @relation(fields: [authorId], references: [id])
   authorId  Int
   likes  Int[]
-  followers Int[]
   category  Category @default(Other)
 }
 
@@ -33,7 +32,10 @@ model User {
   id      Int      @id @default(autoincrement())
   email   String   @unique
   name    String?
+  password String
   posts   Post[]
+  followers Int[]
+
 }
 
 enum Category {

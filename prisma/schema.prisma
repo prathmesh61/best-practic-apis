@@ -9,22 +9,11 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String  
-  content   String?
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
-  likes  Int[]
-  category  Category @default(Other)
-}
 
 
 
@@ -33,12 +22,11 @@ model User {
   email   String   @unique
   name    String?
   password String
-  posts   Post[]
   followers Int[]
-
+  department  Department @default(Tools)
 }
 
-enum Category {
+enum Department {
   Electronics
   Clothing
   HomeAppliances

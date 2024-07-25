@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import UserService from "../services/userService";
 import { registerUser, updateUser } from "../validations/index";
 import prisma from "../../prisma/db";
+import { ExtendedRequest } from "../middlewares/verifyToken";
 
 class UserController {
   static async users(req: Request, res: Response) {
@@ -13,11 +14,14 @@ class UserController {
       res.status(400).json("error in getting users");
     }
   }
-  static async userById(req: Request, res: Response) {
+  static async userById(req: ExtendedRequest, res: Response) {
     try {
       const { id } = req.params;
       const user = await UserService.userById(Number(id));
-      res.status(200).json(user);
+      res.status(200).json({
+        user: user,
+        email: req.user,
+      });
     } catch (error) {
       console.error(error, "error in creating user");
       res.status(400).json("error in getting userBuId");

@@ -1,5 +1,5 @@
 import prisma from "../../prisma/db";
-import { registerUserType } from "../validations";
+import { loginUserType, registerUserType } from "../validations";
 import bcrypt from "bcrypt";
 
 class AuthService {
@@ -13,6 +13,19 @@ class AuthService {
         password: hashPassword,
       },
     });
+    return user;
+  }
+  static async login(data: loginUserType) {
+    const user = await prisma.user.findUnique({
+      where: { email: data.email },
+    });
+    if (!user) {
+      throw new Error("User not exist.");
+    }
+    const isPassRight = await bcrypt.compare(data.password, user?.password);
+    if (!isPassRight) {
+      throw new Error("password or email wrong.");
+    }
     return user;
   }
 }

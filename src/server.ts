@@ -4,6 +4,7 @@ import express from "express";
 import userRoute from "./routes/userRoute";
 import authRoute from "./routes/authRoute";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 const port = process.env.PORT || 8000;
 app.get("/", (req: Request, res: Response) => {
@@ -12,6 +13,7 @@ app.get("/", (req: Request, res: Response) => {
 
 dotenv.config();
 app.use(express.json());
+app.use(cookieParser());
 app.use("/api/v1", userRoute);
 app.use("/api/v1", authRoute);
 
